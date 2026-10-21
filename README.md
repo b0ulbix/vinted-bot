@@ -20,7 +20,7 @@ Bot qui surveille Vinted en continu, envoie une alerte **Discord** ou **Telegram
 |---|---|
 | Serveur | Node.js 22+, Express |
 | Base de données | SQLite (module `node:sqlite` intégré à Node) |
-| Images | sharp (redimensionnement des photos) |
+| Images | sharp (conversion des photos en JPEG avant envoi) |
 | Interface | HTML, CSS, JavaScript sans framework |
 | Mise en ligne | Serveur Ubuntu, services systemd, Cloudflare Tunnel (HTTPS sans ouvrir de port) |
 | Sécurité | Session signée HMAC, comparaison des mots de passe en temps constant, cookie `httpOnly` |
