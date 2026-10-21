@@ -1,0 +1,14 @@
+[Unit]
+Description=Vinted Bot (alertes + tableau de bord)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/vinted-bot
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning --env-file-if-exists=.env src/server.js
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

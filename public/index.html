@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0d10">
+  <title>Vinted Bot</title>
+  <link rel="icon" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css?v=5">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="logo" href="/"><img src="/favicon.svg" width="30" height="30" alt=""><span>Vinted<b>Bot</b></span></a>
+      <nav class="tabs" id="tabs">
+        <button data-tab="items" class="on">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16l-1.5 12.5a2 2 0 0 1-2 1.5h-9a2 2 0 0 1-2-1.5z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span>Annonces</span>
+        </button>
+        <button data-tab="searches">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+          <span>Catégories</span>
+        </button>
+        <button data-tab="settings">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          <span>Réglages</span>
+        </button>
+      </nav>
+      <div class="live" id="live" title="État du bot"><i></i><span>En direct</span></div>
+      <button class="icon-btn" id="logout" title="Se déconnecter" aria-label="Se déconnecter">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Annonces trouvées -->
+    <section id="tab-items">
+      <div class="page-head">
+        <div>
+          <h1>Annonces</h1>
+          <p class="sub" id="items-sub">Chargement…</p>
+        </div>
+        <select id="sort" class="select" aria-label="Trier">
+          <option value="new">Plus récentes</option>
+          <option value="price_asc">Prix croissant</option>
+          <option value="price_desc">Prix décroissant</option>
+        </select>
+      </div>
+      <div class="chipbar" id="group-chips"></div>
+      <div class="chipbar small" id="search-chips"></div>
+      <div class="grid" id="items"></div>
+    </section>
+
+    <!-- Catégories surveillées -->
+    <section id="tab-searches" class="hidden">
+      <div class="page-head">
+        <div>
+          <h1>Mes catégories</h1>
+          <p class="sub">Chaque catégorie surveille Vinted en continu et t'alerte dès qu'une annonce sort.</p>
+        </div>
+        <button class="btn" id="new-search">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Nouvelle catégorie
+        </button>
+      </div>
+      <div id="searches"></div>
+    </section>
+
+    <!-- Réglages -->
+    <section id="tab-settings" class="hidden">
+      <div class="page-head">
+        <div>
+          <h1>Réglages</h1>
+          <p class="sub">Vitesse du bot et salons où tu reçois les alertes.</p>
+        </div>
+      </div>
+      <form id="settings-form" class="settings">
+        <div class="panel">
+          <h3>Vitesse de surveillance</h3>
+          <p class="hint">Temps entre deux vérifications de toutes tes catégories. Plus c'est court, plus tu es rapide, mais plus Vinted risque de bloquer un moment. Entre 10 et 30 secondes, c'est idéal.</p>
+          <label>Intervalle (secondes, minimum 10)
+            <input type="number" name="interval_sec" min="10" step="1" class="short">
+          </label>
+        </div>
+
+        <div class="panel">
+          <h3>🔥 Bonnes affaires</h3>
+          <p class="hint">Le bot estime la cote de chaque nouvelle annonce : prix Cardmarket pour les cartes Pokémon, prix médian des annonces similaires sur Vinted pour le reste (même marque, même type, même taille). En dessous du seuil, c'est une bonne affaire.</p>
+          <label>Seuil (% en dessous de la cote)
+            <input type="number" name="deal_threshold" min="5" max="90" step="5" class="short">
+          </label>
+          <label class="toggle"><input type="checkbox" name="telegram_deals_only"><span class="switch"></span>Telegram : seulement les bonnes affaires (Discord reçoit tout)</label>
+        </div>
+
+        <div class="panel">
+          <h3>Discord (salon par défaut)</h3>
+          <p class="hint">Utilisé pour les catégories qui n'ont pas leur propre salon.</p>
+          <ol class="hint">
+            <li>Sur Discord : clic droit sur un salon → <b>Modifier le salon</b>.</li>
+            <li><b>Intégrations</b> → <b>Webhooks</b> → <b>Nouveau webhook</b> → <b>Copier l'URL du webhook</b>.</li>
+            <li>Colle-la ici, enregistre, puis clique sur « Tester ».</li>
+          </ol>
+          <label>URL du webhook
+            <input type="url" name="discord_webhook" placeholder="https://discord.com/api/webhooks/…">
+          </label>
+          <button type="button" class="btn ghost" data-test="discord">Tester Discord</button>
+        </div>
+
+        <div class="panel">
+          <h3>Telegram</h3>
+          <ol class="hint">
+            <li>Dans Telegram, écris à <b>@BotFather</b> → <b>/newbot</b> → choisis un nom. Il te donne un <b>token</b>.</li>
+            <li>Colle le token ici et enregistre.</li>
+            <li>Envoie un message à ton bot, puis clique sur « Trouver mon chat ID ».</li>
+          </ol>
+          <label>Token du bot
+            <input type="text" name="telegram_token" placeholder="123456789:AA…" autocomplete="off">
+          </label>
+          <label>Chat ID
+            <input type="text" name="telegram_chat_id" placeholder="ex : 123456789">
+          </label>
+          <div class="btns">
+            <button type="button" class="btn ghost" id="find-chat">Trouver mon chat ID</button>
+            <button type="button" class="btn ghost" data-test="telegram">Tester Telegram</button>
+          </div>
+        </div>
+
+        <button class="btn wide">Enregistrer les réglages</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Formulaire d'une catégorie (fenêtre) -->
+  <div id="sheet" class="sheet hidden">
+    <form class="sheet-card" id="search-form" autocomplete="off">
+      <div class="sheet-head">
+        <h2 id="form-title">Nouvelle catégorie</h2>
+        <button type="button" class="icon-btn" id="close-sheet" aria-label="Fermer">
+          <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="sheet-body">
+        <input type="hidden" name="id">
+        <div class="row">
+          <label>Nom
+            <input type="text" name="name" placeholder="rempli automatiquement" required>
+          </label>
+          <label>Groupe
+            <input type="text" name="grp" list="groups" placeholder="ex : Perso, Revente…">
+            <datalist id="groups"></datalist>
+          </label>
+        </div>
+        <label>Mots-clés
+          <input type="text" name="search_text" placeholder="ex : nike dunk, carte pokémon… (optionnel)">
+        </label>
+
+        <p class="label">Filtres Vinted</p>
+        <div class="filters" id="filters">
+          <div class="filter" data-code="catalog"><button type="button" class="filter-head"><span>Catégorie Vinted</span><span class="sel"></span></button><div class="filter-body hidden"></div></div>
+          <div class="filter" data-code="size"><button type="button" class="filter-head"><span>Taille</span><span class="sel"></span></button><div class="filter-body hidden"></div></div>
+          <div class="filter" data-code="brand"><button type="button" class="filter-head"><span>Marque</span><span class="sel"></span></button><div class="filter-body hidden"></div></div>
+          <div class="filter" data-code="status"><button type="button" class="filter-head"><span>État</span><span class="sel"></span></button><div class="filter-body hidden"></div></div>
+          <div class="filter" data-code="color"><button type="button" class="filter-head"><span>Couleur</span><span class="sel"></span></button><div class="filter-body hidden"></div></div>
+          <div class="filter" data-code="material"><button type="button" class="filter-head"><span>Matière</span><span class="sel"></span></button><div class="filter-body hidden"></div></div>
+          <div class="price-filter">
+            <label>Prix min (€)<input type="number" name="price_from" min="0" step="1" placeholder="0"></label>
+            <label>Prix max (€)<input type="number" name="price_to" min="0" step="1" placeholder="∞"></label>
+          </div>
+        </div>
+
+        <div class="preview" id="preview"></div>
+
+        <p class="label">Alertes</p>
+        <div class="toggles">
+          <label class="toggle"><input type="checkbox" name="active" checked><span class="switch"></span>Catégorie active</label>
+          <label class="toggle"><input type="checkbox" name="notify_discord" checked><span class="switch"></span>Alerte Discord</label>
+          <label class="toggle"><input type="checkbox" name="discord_deals_only"><span class="switch"></span>Discord : seulement les bonnes affaires 🔥</label>
+          <label class="toggle"><input type="checkbox" name="notify_telegram" checked><span class="switch"></span>Alerte Telegram</label>
+        </div>
+        <label>Salon Discord dédié (optionnel)
+          <input type="url" name="discord_webhook" placeholder="vide = salon par défaut des Réglages">
+        </label>
+        <details class="more">
+          <summary>Importer depuis un lien Vinted</summary>
+          <label>Colle l'adresse d'une recherche Vinted : les filtres se remplissent tout seuls
+            <input type="url" name="paste_url" placeholder="https://www.vinted.fr/catalog?…">
+          </label>
+        </details>
+      </div>
+      <div class="sheet-foot">
+        <button type="button" class="btn ghost" id="cancel-edit">Annuler</button>
+        <button class="btn" id="save-search">Créer la catégorie</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Visionneuse plein écran -->
+  <div id="lightbox" class="lightbox hidden">
+    <button class="lb-close" aria-label="Fermer">✕</button>
+    <div class="lb-gallery gallery"></div>
+    <div class="lb-bar">
+      <div class="lb-info">
+        <div class="lb-title"></div>
+        <div class="lb-price"></div>
+      </div>
+      <a class="btn lb-buy" target="_blank" rel="noopener">Acheter</a>
+    </div>
+  </div>
+
+  <script src="/app.js?v=5"></script>
+  <script src="/search-form.js?v=5"></script>
+</body>
+</html>

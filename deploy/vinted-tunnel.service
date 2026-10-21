@@ -1,0 +1,13 @@
+[Unit]
+Description=Cloudflare Tunnel vers vinted.ton-domaine.fr
+After=network-online.target vinted-bot.service
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+ExecStart=/usr/bin/cloudflared tunnel --no-autoupdate --config /home/ubuntu/vinted-bot/cloudflared/config-server.yml run
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
